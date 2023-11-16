@@ -17,5 +17,5 @@ type IOption interface {
 
 // IMysql connector 接口
 type IMysql interface {
-	Connect() (*gorm.DB, error)
+	Connect() *gorm.DB
 }

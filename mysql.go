@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -25,12 +26,16 @@ func (m connector) makeConfig() (config *gorm.Config) {
 	return
 }
 
-func (m connector) Connect() (db *gorm.DB, err error) {
+func (m connector) Connect() (db *gorm.DB) {
+	var err error
 	if db, err = gorm.Open(mysql.Open(m.opt.DataSourceName()), m.makeConfig()); err != nil {
-		return
+		panic(fmt.Sprintf("connect mysql failed: %s\n", err.Error()))
 	}
 
-	err = m.option(db)
+	if err = m.option(db); err != nil {
+		panic(fmt.Sprintf("mysql option pool failed: %s\n", err.Error()))
+	}
+
 	return
 }
 
